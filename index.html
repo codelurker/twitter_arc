@@ -10,7 +10,6 @@
 	<style type="text/css">
 		body {
   		margin-top: 1.0em;
-  		background-color: #447ed0;
 		  font-family: "Helvetica,Arial,FreeSans"; 
   		color: #000000;
     }
@@ -18,12 +17,12 @@
       margin: 0 auto;
       width: 700px;
     }
-		h1 { font-size: 3.8em; color: #bb812f; margin-bottom: 3px; }
+		h1 { font-size: 3.8em; margin-bottom: 3px; }
 		h1 .small { font-size: 0.4em; }
 		h1 a { text-decoration: none }
-		h2 { font-size: 1.5em; color: #bb812f; }
-    h3 { text-align: center; color: #bb812f; }
-    a { color: #bb812f; }
+		h2 { font-size: 1.5em; }
+    h3 { text-align: center; }
+    a { color: #cccccc; }
     .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
     .download { float: right; }
 		pre { background: #000; color: #fff; padding: 15px;}
@@ -34,7 +33,7 @@
 </head>
 
 <body>
-  <a href="http://github.com/themattharris/Twitter-Archiver"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  <a href="http://code.themattharris.com/Twitter-Archiver"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
   
   <div id="container">
 
@@ -45,27 +44,25 @@
         <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
     </div>
       
-    <h1><a href="http://github.com/themattharris/Twitter-Archiver">Twitter-Archiver</a> 
-      <span class="small">by <a href="http://github.com/themattharris">themattharris</a></span></h1>
+    <h1><a href="http://code.themattharris.com/Twitter-Archiver">Twitter-Archiver</a> 
+      <span class="small">by <a href="http://themattharris.com">themattharris</a></span></h1>
 
     <div class="description">
       Python script which downloads your status updated and received direct messages from Twitter and stores them in a CSV file.
     </div>
 
     <h2>Dependencies</h2>
-<p>simplejson</p>
-<h2>Install</h2>
-<p>Copy @local_settings.py.template@ to a new file @local_settings.py@ in the same folder as twitter_arc.py
-Edit your new @local_settings.py@ and fill in your Twitter Username and Password.
-Run terminal and type @python twitter_arc.py@
-To update the backup run the command again. Only new status updates and direct messages since the last backup will be downloaded</p>
-<h2>License</h2>
-<p>Twitter Archiver is licensed under the terms of the MIT License</p>
-<h2>Authors</h2>
-<p>Matt Harris (matt@themattharris.com)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Matt Harris (matt@themattharris.com)<br/>      </p>
+    <p>simplejson</p>
 
+    <h2>Install</h2>
+    <ol>
+      <li>Copy local_settings.py.template to a new file local_settings.py in the same folder as twitter_arc.py</li>
+      <li>Edit your new local_settings.py and fill in your Twitter Username and Password.</li>
+      <li>Run terminal and type python twitter_arc.py</li>
+      <li>To update the backup run the command again. Only new status updates and direct messages since the last backup will be downloaded</li>
+    </ol>
+    <h2>License</h2>
+    <p>Twitter Archiver is licensed under the terms of the MIT License</p>
 
     <h2>Download</h2>
     <p>
