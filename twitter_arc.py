@@ -1,4 +1,12 @@
-#!/usr/bin/python2.5
+#!/usr/bin/python
+# -*- encoding: utf-8 -*-
+"""
+Twitter Archiver
+Author:  Matt Harris (matt [at] themattharris dot com)
+Version: 0.1
+Updated: 20 Sep 2009
+License: MIT License (included file MIT-LICENSE)
+"""
 from __future__ import with_statement
 
 import sys

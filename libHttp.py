@@ -1,17 +1,11 @@
 # -*- encoding: utf-8 -*-
 
 """
-HTTP Processing Library v0.1
-Matt Harris <matt@themattharris.com>
-
-Repo:
-http://themattharris.com/code/http
-
-Example usage:
-
-Copyright (c) 2009, Matt Harris
-All Rights Reserved.
-
+HTTP Processing Library
+Author:  Matt Harris (matt [at] themattharris dot com)
+Version: 0.2
+Updated: 20 Sep 2009
+License: MIT License (included file MIT-LICENSE)
 """
 
 import urllib
@@ -23,7 +17,7 @@ from StringIO import StringIO
 import logging
 
 # Who are we
-USER_AGENT = 'libHttp/0.1 using Python urllib2'
+USER_AGENT = 'libHttp/0.2 using Python urllib2'
 
 __logger = logging.getLogger('libHttp')
 
