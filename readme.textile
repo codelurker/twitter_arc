@@ -1,6 +1,6 @@
 h1. Twitter Arc
 
-Python script which downloads your status updated and received direct messages from Twitter and stores them in a CSV file.
+Python script which downloads your status updates and received direct messages from Twitter and stores them in a CSV file.
 
 h2. Dependencies
 
