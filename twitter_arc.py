@@ -14,23 +14,31 @@ except ImportError:
 
 # Import configuration
 from local_settings import *
-from pprint import pprint
 
 LOGGER = 'twitter_arc'
-TWEETS_FILE = '%s\'s tweets.tsv' % USERNAME
-DMS_FILE = '%s\'s dms.tsv' % USERNAME
+TWEETS_FILE = '%s\'s tweets.csv' % USERNAME
+DMS_FILE = '%s\'s dms.csv' % USERNAME
 TWITTER_URL = 'http://twitter.com'
 TWITTER_FORMAT = '.json'
 TWITTER_COUNT = 200
 LOG_FILES = 5
 __logger = logging.getLogger()
 
+def getFilename(dms):
+    if dms:
+        return DMS_FILE
+    else:
+        return TWEETS_FILE
+
 def configure_logging():
-    __logger.setLevel( logging.__getattribute__(LOGLEVEL))
+    try:
+        __logger.setLevel(logging.__getattribute__(LOGLEVEL))
+    except:
+        __logger.setLevel(logging.CRITICAL)
 
     # rotating logger
     handler = logging.handlers.RotatingFileHandler(
-                  'twitter_arc.txt', maxBytes=10240, backupCount=LOG_FILES)
+                  'log', maxBytes=10240, backupCount=LOG_FILES)
     __logger.addHandler(handler)
 
 def check_credentials():
@@ -40,11 +48,32 @@ def check_credentials():
     __logger.info('Checking Your Credentials with Twitter')
     response = queryAPI('/account/verify_credentials')
     return response['code'] == 200
+    
+def loadTweets(dms=False):
+    tweets = []
+    import csv
+    try:
+        # this will skip the header row by default
+        reader = csv.reader(open(getFilename(dms)))
+        for row in reader:
+            tweets.append(row)
+        if tweets:
+            # delete the header row
+            del tweets[0]
+    except IOError:
+        # file doesn't exist
+        pass
+    return tweets
 
 def download_tweets(dms=False):
-    page = 0
-    tweets = []
+    page = 1
+    tweets = loadTweets(dms)
+    tweets.reverse()
     retry = False
+    if not tweets:
+        since_id = 0
+    else:
+        since_id = max(int(t[0]) for t in tweets)
     
     if dms:
         action='/direct_messages'
@@ -53,11 +82,11 @@ def download_tweets(dms=False):
     
     while True:
         args = {'count': 200, 'page':page}
-        if SINCE_ID and SINCE_ID > 0:
-            args['since_id'] = SINCE_ID
-        if MAX_ID and MAX_ID > 0:
-            args['max_id'] = MAX_ID
-
+        if since_id > 0:
+            __logger.info('Requesting tweets since %s' % since_id)
+            print 'Requesting tweets since %s' % since_id
+            args['since_id'] = since_id
+            
         __logger.info('Requesting page %s' % page)
         print 'Requesting page %s' % page
         response = queryAPI(action, args)
@@ -80,12 +109,17 @@ def download_tweets(dms=False):
             break
         elif 'error' in data:
             __logger.debug('Houston we have a problem')
-            raise ValueError, data
+            print data['error']
+            sys.exit(0)
         else:
+            for tweet in data:
+                tweet = buildTweet(tweet, dms)
+                tweets.append(tweet)
             retry = False
-
-        store_tweets(data, dms)
         time.sleep(5)
+
+    # we want the most recent tweet at the top
+    tweets.sort(key = lambda t: int(t[0]), reverse=True)
     return tweets
     
 def buildTweet(tweet, dms=False):
@@ -102,25 +136,31 @@ def buildTweet(tweet, dms=False):
     tweet['text'] = s.encode('ascii', 'xmlcharrefreplace')
     
     if dms:
-        s = Template("${id}\t${sender_id}\t${recipient_id}\t${created_at}\t" \
-            "${sender_screen_name}\t${recipient_screen_name}\t${text}\n")
+        return [tweet['id'], tweet['created_at'], tweet['sender_id'],
+                tweet['sender_screen_name'], tweet['text']]
     else:
-        s = Template("${id}\t${created_at}\t${text}\t${source}\t" \
-            "${in_reply_to_user_id}\t${in_reply_to_status_id}\t" \
-            "${in_reply_to_screen_name}\t${favorited}\t${truncated}\n")
-        
-    return s.substitute(tweet)
+        return [tweet['id'], tweet['created_at'], tweet['favorited'],
+                tweet['truncated'], tweet['in_reply_to_status_id'],
+                tweet['in_reply_to_user_id'], 
+                tweet['in_reply_to_screen_name'], tweet['source'], 
+                tweet['text']]
+                
+def headers(dms=False):
+    """Constructs the header row for the CSV file"""
+    if dms:
+        return ['ID', 'Created', 'Sender ID', 'Sender Name', 'Message']
+    else:
+        return ['ID', 'Created', 'Favorited', 'Truncated', 'Reply Status ID',
+                'Reply User ID', 'Reply Screen Name', 'Source', 'Tweet']
 
 def store_tweets(tweets, dms=False):
-    if dms:
-        filename = DMS_FILE
-    else:
-        filename = TWEETS_FILE
-    with open(filename, 'a') as f:
-        for tweet in tweets:
-            __logger.debug('Writing tweet to file')
-            f.write(buildTweet(tweet, dms))
-
+    import csv
+    writer = csv.writer(open(getFilename(dms), 'w'))
+    writer.writerow(headers(dms))
+    for tweet in tweets:
+        __logger.debug('Writing tweet to file')
+        writer.writerow(tweet)
+        
 def queryAPI(relpath, args=None):
     import libHttp
     url = ''.join([ TWITTER_URL, relpath, TWITTER_FORMAT ])
@@ -133,9 +173,12 @@ def archive_twitter():
     __logger.info('Twitter Archiver by themattharris')
     configure_logging()
     if check_credentials():
+        print "Requesting Statuses"
+        tweets = download_tweets()
+        store_tweets(tweets)
+        print "Requesting Direct Messages"
         dms = download_tweets(dms=True)
-        sys.exit(0)
-        tweets = download_tweets(dm=True)
+        store_tweets(dms, True)
 
 if __name__ == '__main__':
     archive_twitter()
