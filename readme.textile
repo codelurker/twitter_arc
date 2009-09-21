@@ -8,34 +8,24 @@ h2. Dependencies
 
 h2. Usage
 
-# Copy @local_settings.py.template@ to a new file @local_settings.py@ in the 
-same folder as twitter_arc.py
-# Edit your new @local_settings.py@ and fill in your Twitter Username and 
-Password.
+# Copy @local_settings.py.template@ to a new file @local_settings.py@ in the same folder as twitter_arc.py
+# Edit your new @local_settings.py@ and fill in your Twitter Username and Password.
 # Run terminal and type @python twitter_arc.py@
-# To update the backup run the command again. Only new status updates and 
-direct messages since the last backup will be downloaded
+# To update the backup run the command again. Only new status updates and direct messages since the last backup will be downloaded
 
 h2. General Notes
 
-# The first time the script runs it will download all Tweets and Direct 
-Messages on your account which Twitter exposes. At the time of writing this 
-was 3200 statuses. Direct messages vary but rarely go about 1000.
+# The first time the script runs it will download all Tweets and Direct Messages on your account which Twitter exposes. At the time of writing this was 3200 statuses. Direct messages vary but rarely go about 1000.
 # The script requests 200 updates at a time, so be sensible about running it.
-# The script uses the CSV file to know what the last tweet requested was. If
-you delete or move the file the script will assume a backup has never been 
-made and download all of your exposed Tweets again.
-# The script can only backup what Twitter exposes. If you have more than 3200
-tweets this means a full backup of all your tweets is not possible. 
-# It is normal for the script to ask Twitter twice for the status updates if
-nothing has changed.
+# The script uses the CSV file to know what the last tweet requested was. If you delete or move the file the script will assume a backup has never been made and download all of your exposed Tweets again.
+# The script can only backup what Twitter exposes. If you have more than 3200 tweets this means a full backup of all your tweets is not possible. 
+# It is normal for the script to ask Twitter twice for the status updates if nothing has changed.
 
 h2. Why CSV?
 
-CSV was chosen as the output format as it requires no special databases to 
-run and is legible on all computers. CSV can be opened by all popular 
-spreadsheet packages and directly imported to databases if required.
+CSV was chosen as the output format as it requires no special databases to run and is legible on all computers. CSV can be opened by all popular spreadsheet packages and directly imported to databases if required.
 
 h2. License
+
 Twitter Archiver is licensed under the terms of the MIT License, see 
 the included MIT-LICENSE file.
