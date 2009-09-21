@@ -131,12 +131,11 @@ def request(source, etag=None, lastmodified=None, headers={}, debug=False,
     If basicauth is True, and username and password are given, the function 
     will use Basic Authentication to access the source.
     
-    Data is the POST/PUT data to be sent to the server. Note this will force a 
-    POST request unless the method is set to PUT.
+    Post_data is the POST/PUT/GET data to be sent to the server.
     
     Action is the HTTP action which should take place. Note if Data is not 
-    None and the action is GET, the action will be ignored and a POST will 
-    take place.
+    None and the action is GET, the post_data will be converted to a 
+    querystring.
     """
     __logger.debug('libHttp.request with: URL: %s\n Headers: %s\n Username: %s\n Password: %s\n Action: %s\n' % \
         (source, headers, username, password, action))
