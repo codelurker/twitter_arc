@@ -21,16 +21,12 @@ h2. General Notes
 # The first time the script runs it will download all Tweets and Direct 
 Messages on your account which Twitter exposes. At the time of writing this 
 was 3200 statuses. Direct messages vary but rarely go about 1000.
-
 # The script requests 200 updates at a time, so be sensible about running it.
-
 # The script uses the CSV file to know what the last tweet requested was. If
 you delete or move the file the script will assume a backup has never been 
 made and download all of your exposed Tweets again.
-
 # The script can only backup what Twitter exposes. If you have more than 3200
 tweets this means a full backup of all your tweets is not possible. 
-
 # It is normal for the script to ask Twitter twice for the status updates if
 nothing has changed.
 
