@@ -4,13 +4,14 @@ Python script which downloads your status updates and received direct messages f
 
 h2. Dependencies
 
-* simplejson (unless your running Python 2.6). Download from http://pypi.python.org/pypi/simplejson/
+* simplejson. Download from http://pypi.python.org/pypi/simplejson/ or type 'sudo easy_install simplejson' into your terminal
 
 h2. Usage
 
-# Copy @local_settings.py.template@ to a new file @local_settings.py@ in the same folder as twitter_arc.py
-# Edit your new @local_settings.py@ and fill in your Twitter Username and Password.
-# Run terminal and type @python twitter_arc.py@
+# Rename @local_settings.py.template@ to @local_settings.py@.
+# Edit @local_settings.py@ and fill in your Twitter Username and Password.
+# Save @local_settings.py@.
+# Run terminal (in Applications > Utilities) and type @python twitter_arc.py@
 # To update the backup run the command again. Only new status updates and direct messages since the last backup will be downloaded
 
 h2. General Notes
