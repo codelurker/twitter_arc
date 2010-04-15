@@ -76,7 +76,7 @@ def check_credentials():
     __logger.info('Checking Your Credentials with Twitter')
     response = queryAPI('/account/verify_credentials')
     return response['code'] == 200
-    
+
 def loadTweets(dms=False):
     tweets = []
     import csv
@@ -102,25 +102,25 @@ def download_tweets(dms=False):
         since_id = 0
     else:
         since_id = max(int(t[0]) for t in tweets)
-    
+
     if dms:
         action='/direct_messages'
     else:
         action='/statuses/user_timeline'
-    
+
     while True:
         args = {'count': 200, 'page':page}
         if since_id > 0:
             __logger.info('Requesting tweets since %s' % since_id)
             print 'Requesting tweets since %s' % since_id
             args['since_id'] = since_id
-            
+
         __logger.info('Requesting page %s' % page)
         print 'Requesting page %s' % page
         response = queryAPI(action, args)
-        
+
         page += 1
-        
+
         try:
             data = json.loads(response['data'])
         except ValueError:
@@ -149,30 +149,44 @@ def download_tweets(dms=False):
     # we want the most recent tweet at the top
     tweets.sort(key = lambda t: int(t[0]), reverse=True)
     return tweets
-    
+
 def buildTweet(tweet, dms=False):
     """Constructs the tweet line for storage in a text file"""
     from string import Template
-    
+
     s = tweet['text']
     # if we haven't already got a unicoded string, get one now
     if type(tweet['text']) == 'str':
         __logger.debug('Attempting to decode from latin-1')
         s = s.decode('latin-1')
-    
+
     __logger.debug('Encoding tweet as ASCII with HTML Character replacement')
     tweet['text'] = s.encode('ascii', 'xmlcharrefreplace')
-    
+    tweet['created_at'] = parseTwitterTimeString(tweet['created_at'])
+
     if dms:
         return [tweet['id'], tweet['created_at'], tweet['sender_id'],
                 tweet['sender_screen_name'], tweet['text']]
     else:
         return [tweet['id'], tweet['created_at'], tweet['favorited'],
                 tweet['truncated'], tweet['in_reply_to_status_id'],
-                tweet['in_reply_to_user_id'], 
-                tweet['in_reply_to_screen_name'], tweet['source'], 
+                tweet['in_reply_to_user_id'],
+                tweet['in_reply_to_screen_name'], tweet['source'],
                 tweet['text']]
-                
+
+def parseTwitterTimeString(dt):
+    from datetime import timedelta, datetime
+    
+    # take the timezone out
+    import re
+    regx = re.compile('[+|-]\d{4}')
+    tz = regx.findall(dt)[0]
+    fmt = "%a %b %d %H:%M:%S %Y"
+    time = datetime.strptime(dt.replace(tz, ''), fmt)
+    # iso8601 format
+    time = time.strftime("%Y-%m-%dT%H:%M:%S%Z")
+    return '%s%s' % (time, tz)
+
 def headers(dms=False):
     """Constructs the header row for the CSV file"""
     if dms:
@@ -188,7 +202,7 @@ def store_tweets(tweets, dms=False):
     for tweet in tweets:
         __logger.debug('Writing tweet to file')
         writer.writerow(tweet)
-        
+
 def queryAPI(relpath, args=None):
     import libHttp
     url = ''.join([ TWITTER_URL, relpath, TWITTER_FORMAT ])
