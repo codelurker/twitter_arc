@@ -46,7 +46,7 @@ from local_settings import *
 LOGGER = 'twitter_arc'
 TWEETS_FILE = '%s\'s tweets.csv' % USERNAME
 DMS_FILE = '%s\'s dms.csv' % USERNAME
-TWITTER_URL = 'http://twitter.com'
+TWITTER_URL = 'https://twitter.com'
 TWITTER_FORMAT = '.json'
 TWITTER_COUNT = 200
 LOG_FILES = 5
